@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/home/czs/桌面/lef/build",
+  "command": "/usr/bin/g++   -g -std=gnu++11 -o CMakeFiles/lef_example.dir/main.cpp.o -c /home/czs/桌面/lef/main.cpp",
+  "file": "/home/czs/桌面/lef/main.cpp",
+  "output": "CMakeFiles/lef_example.dir/main.cpp.o"
+},
+{
+  "directory": "/home/czs/桌面/lef/build",
+  "command": "/usr/bin/g++   -g -std=gnu++11 -o CMakeFiles/lef_example.dir/LefFile.cpp.o -c /home/czs/桌面/lef/LefFile.cpp",
+  "file": "/home/czs/桌面/lef/LefFile.cpp",
+  "output": "CMakeFiles/lef_example.dir/LefFile.cpp.o"
+},
+{
+  "directory": "/home/czs/桌面/lef/build",
+  "command": "/usr/bin/g++   -g -std=gnu++11 -o CMakeFiles/lef_example.dir/LefParser.cpp.o -c /home/czs/桌面/lef/LefParser.cpp",
+  "file": "/home/czs/桌面/lef/LefParser.cpp",
+  "output": "CMakeFiles/lef_example.dir/LefParser.cpp.o"
+}
+]

@@ -1,0 +1,1 @@
+/usr/bin/g++ -g CMakeFiles/lef_example.dir/main.cpp.o CMakeFiles/lef_example.dir/LefFile.cpp.o CMakeFiles/lef_example.dir/LefParser.cpp.o -o lef_example 
