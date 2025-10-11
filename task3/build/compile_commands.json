@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/home/czs/桌面/placement_-project/task3/build",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_-project/task3 -I/home/czs/桌面/placement_-project/task3/Common -I/home/czs/桌面/placement_-project/task3/MyPlace -I/home/czs/桌面/placement_-project/task3/PlaceData -O3 -DNDEBUG -std=c++17 -Wall -Wextra -Wpedantic -o CMakeFiles/myplace.dir/main.cpp.o -c /home/czs/桌面/placement_-project/task3/main.cpp",
+  "file": "/home/czs/桌面/placement_-project/task3/main.cpp",
+  "output": "CMakeFiles/myplace.dir/main.cpp.o"
+},
+{
+  "directory": "/home/czs/桌面/placement_-project/task3/build",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_-project/task3 -I/home/czs/桌面/placement_-project/task3/Common -I/home/czs/桌面/placement_-project/task3/MyPlace -I/home/czs/桌面/placement_-project/task3/PlaceData -O3 -DNDEBUG -std=c++17 -Wall -Wextra -Wpedantic -o CMakeFiles/myplace.dir/parse_bookshelf.cpp.o -c /home/czs/桌面/placement_-project/task3/parse_bookshelf.cpp",
+  "file": "/home/czs/桌面/placement_-project/task3/parse_bookshelf.cpp",
+  "output": "CMakeFiles/myplace.dir/parse_bookshelf.cpp.o"
+}
+]
