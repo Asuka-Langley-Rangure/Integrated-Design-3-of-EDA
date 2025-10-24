@@ -6,6 +6,7 @@
         "vector": "cpp",
         "hash_map": "cpp",
         "valarray": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "limits": "cpp"
     }
 }

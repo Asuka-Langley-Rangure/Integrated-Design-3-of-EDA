@@ -53,12 +53,12 @@ void PLOTTING::plotPlacement(string imageName, PlaceData *db)
         if (curNode->isMacro)
         {
             img.draw_rectangle(x1, y1, x2, y2, Green, opacity);
-            std::cout << "Plotting module: " << curNode->name
-                      << " at (" << x1 << "," << y1 << ") to (" << x2 << "," << y2 << ")\n";
         }
         else
         {
             img.draw_rectangle(x1, y1, x2, y2, Red, opacity);
+            std::cout << "Plotting module: " << curNode->name
+            << " at (" << x1 << "," << y1 << ") to (" << x2 << "," << y2 << ")\n";
         }
     }
 

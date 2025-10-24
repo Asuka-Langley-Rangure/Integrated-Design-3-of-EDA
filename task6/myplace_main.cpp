@@ -21,8 +21,8 @@ int main(int argc, char *argv[])
         // 如果命令行传入路径参数，例如：./adaptec1/adaptec1.aux
         tmp_path = fs::path(argv[1]);
     } else {
-        // 默认查找当前目录下的 adaptec5 文件夹
-        tmp_path = exe_dir / "adaptec5" / "adaptec5.aux";
+        // 默认查找当前目录下的 adaptec1 文件夹
+        tmp_path = exe_dir / "adaptec1" / "adaptec1.aux";
     }
 
     // 创建 PlaceData 对象

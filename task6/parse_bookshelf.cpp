@@ -415,20 +415,20 @@ bool ParseBookshelfDataset(const fs::path tmp_path, PlaceData* db) {
         parse_nodes((base_path / top_info["nodes"]).string(), db);
         parse_pl((base_path / top_info["pl"]).string(),     db);
 
-        // double xmin = std::numeric_limits<double>::max();
-        // double ymin = std::numeric_limits<double>::max();
-        // double xmax = std::numeric_limits<double>::lowest();
-        // double ymax = std::numeric_limits<double>::lowest();
+        double xmin = std::numeric_limits<double>::max();
+        double ymin = std::numeric_limits<double>::max();
+        double xmax = std::numeric_limits<double>::lowest();
+        double ymax = std::numeric_limits<double>::lowest();
 
-        // for (auto &r : db->SiteRows) {
-        //     xmin = std::min(xmin, static_cast<double>(r.start.x));
-        //     ymin = std::min(ymin, static_cast<double>(r.bottom));
-        //     xmax = std::max(xmax, static_cast<double>(r.end.x));
-        //     ymax = std::max(ymax, static_cast<double>(r.bottom + r.height));
-        // }
+        for (auto &r : db->SiteRows) {
+            xmin = std::min(xmin, static_cast<double>(r.start.x));
+            ymin = std::min(ymin, static_cast<double>(r.bottom));
+            xmax = std::max(xmax, static_cast<double>(r.end.x));
+            ymax = std::max(ymax, static_cast<double>(r.bottom + r.height));
+        }
 
-        // db->chipRegion.ll = POS_2D(float(xmin), float(ymin));
-        // db->chipRegion.ur = POS_2D(float(xmax), float(ymax));
+        db->chipRegion.ll = POS_2D(float(xmin), float(ymin));
+        db->chipRegion.ur = POS_2D(float(xmax), float(ymax));
     }
     catch (const std::exception& e) {
         std::cerr << "Error parsing bookshelf dataset: " << e.what() << std::endl;
