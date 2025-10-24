@@ -1,0 +1,3 @@
+/home/czs/桌面/MyPlacement/build/CMakeFiles/myplace.dir
+/home/czs/桌面/MyPlacement/build/CMakeFiles/edit_cache.dir
+/home/czs/桌面/MyPlacement/build/CMakeFiles/rebuild_cache.dir

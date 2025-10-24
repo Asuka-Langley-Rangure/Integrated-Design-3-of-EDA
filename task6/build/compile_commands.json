@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/home/czs/桌面/MyPlacement/build",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/MyPlacement/MyPlace -I/home/czs/桌面/MyPlacement/PlaceData -I/home/czs/桌面/MyPlacement/Plot -I/home/czs/桌面/MyPlacement/Common -I/home/czs/桌面/MyPlacement/Library/CImg -O3 -DNDEBUG -o CMakeFiles/myplace.dir/myplace_main.cpp.o -c /home/czs/桌面/MyPlacement/myplace_main.cpp",
+  "file": "/home/czs/桌面/MyPlacement/myplace_main.cpp",
+  "output": "CMakeFiles/myplace.dir/myplace_main.cpp.o"
+},
+{
+  "directory": "/home/czs/桌面/MyPlacement/build",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/MyPlacement/MyPlace -I/home/czs/桌面/MyPlacement/PlaceData -I/home/czs/桌面/MyPlacement/Plot -I/home/czs/桌面/MyPlacement/Common -I/home/czs/桌面/MyPlacement/Library/CImg -O3 -DNDEBUG -o CMakeFiles/myplace.dir/parse_bookshelf.cpp.o -c /home/czs/桌面/MyPlacement/parse_bookshelf.cpp",
+  "file": "/home/czs/桌面/MyPlacement/parse_bookshelf.cpp",
+  "output": "CMakeFiles/myplace.dir/parse_bookshelf.cpp.o"
+},
+{
+  "directory": "/home/czs/桌面/MyPlacement/build",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/MyPlacement/MyPlace -I/home/czs/桌面/MyPlacement/PlaceData -I/home/czs/桌面/MyPlacement/Plot -I/home/czs/桌面/MyPlacement/Common -I/home/czs/桌面/MyPlacement/Library/CImg -O3 -DNDEBUG -o CMakeFiles/myplace.dir/Plot/plot.cpp.o -c /home/czs/桌面/MyPlacement/Plot/plot.cpp",
+  "file": "/home/czs/桌面/MyPlacement/Plot/plot.cpp",
+  "output": "CMakeFiles/myplace.dir/Plot/plot.cpp.o"
+}
+]
