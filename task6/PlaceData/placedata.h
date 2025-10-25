@@ -26,6 +26,10 @@ public:
     vector<Net *> Nets;
     vector<SiteRow> SiteRows;
 
+    std::vector<std::vector<Bin>> bins;
+    int binRows, binCols;  // 实际 = M x M
+    float siteHeight;
+
     map<string, Module *> moduleMap; 
 };
 

@@ -32,9 +32,13 @@ int main(int argc, char *argv[])
     }
 
     MyPlacer *myplacer = new MyPlacer(db);
+    myplacer->createfillerCells();
+    myplacer->initializeBins(0.8);
+    myplacer->initialPlacement();
+
     PLOTTING::plotPlacement("gp_result", db);
 
-    //PrintDatabaseSummary(db);
+    PrintDatabaseSummary(db);
     
     std::cout << "✅ Parsing and printing completed successfully." << std::endl;
     return 0;

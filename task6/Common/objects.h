@@ -138,4 +138,20 @@ public:
     }
 };
 
+class Bin {
+public:
+    POS_2D ll;          // left-bottom
+    POS_2D ur;          // right-top
+    POS_2D center;
+    double width;
+    double height;
+    double terminalDensity;  // 固定宏贡献的密度
+    double darkDensity;      // 超出 SiteRow 的“暗区”密度
+
+    Bin() {
+        terminalDensity = 0.0;
+        darkDensity = 0.0;
+    }
+};
+
 #endif

@@ -1,7 +1,10 @@
 #ifndef PLOT_H
 #define PLOT_H
 #include "common.h"
+
+#define cimg_display 0
 #include "CImg.h"
+
 #include "placedata.h"
 #include "myplace.h"
 

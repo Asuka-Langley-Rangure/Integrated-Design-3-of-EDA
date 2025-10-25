@@ -163,6 +163,9 @@ void parse_nets(const std::string& filename, PlaceData* db)
                 pin->idx = i;
                 auto it = db->moduleMap.find(pin_parts[0]);
                 pin->module = (it == db->moduleMap.end() ? nullptr : it->second);
+                if (pin->module) {
+                    pin->module->modulePins.push_back(pin);
+                }
                 pin->net = currentNet;
                 pin->direction = pin_parts[1];
                 pin->offset.x = stod(pin_parts[3]);
@@ -411,8 +414,8 @@ bool ParseBookshelfDataset(const fs::path tmp_path, PlaceData* db) {
         auto [top_info, folder_path] = parse_top(tmp_path.string());
         fs::path base_path = fs::path(folder_path);
         parse_scl((base_path / top_info["scl"]).string(),   db);
-        parse_nets((base_path / top_info["nets"]).string(), db);
         parse_nodes((base_path / top_info["nodes"]).string(), db);
+        parse_nets((base_path / top_info["nets"]).string(), db);
         parse_pl((base_path / top_info["pl"]).string(),     db);
 
         double xmin = std::numeric_limits<double>::max();

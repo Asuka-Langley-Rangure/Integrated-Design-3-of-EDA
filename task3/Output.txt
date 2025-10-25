@@ -1,0 +1,24 @@
+Use BOOKSHELF placement format
+Set core region from site info: lower left: (459,459) to upper right: (11151,11139)
+    NumModules:211447
+    NumNodes: 210904 (= 210k)
+    Terminals = 543
+        Nets = 221142
+        Pins = 944053
+Max net degree= 2271
+<<<< DATABASE SUMMARIES >>>>
+        Core region: lower left: (459,459) to upper right: (11151,11139)
+    Row Height/Number:12/890 (site step 1)
+        Core Area: 114190560 (114190560)
+        Cell Area: 37286292 (32.652692%)
+        Movable Area: 37286292 (32.652692%)
+        Fixed Area:  64093992 (56.128976%)
+        Fixed Area in Core: 49164072 (43.054410%)
+        Placement Util.: 57.340160% (=move/freeSites)
+        Core Density: 75.707102% (=usedArea/core)
+                       Cell #: 210361 (= 210k)
+                     Object #: 210904 (= 210k) (fixed: 543) (macro: 0)
+                        Net #: 221142 (= 221k)
+              Max net degree=: 2271
+                        Pin 1 (1348) 2 (117104) 3-10 (87085) 11-100 (15603) 100- (2)
+                        Pin #: 944053
