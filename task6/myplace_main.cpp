@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     PLOTTING::plotPlacement("gp_result", db);
 
-    PrintDatabaseSummary(db);
+    // PrintDatabaseSummary(db);
     
     std::cout << "✅ Parsing and printing completed successfully." << std::endl;
     return 0;
