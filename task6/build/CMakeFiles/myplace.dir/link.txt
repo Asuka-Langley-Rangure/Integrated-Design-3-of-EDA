@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/myplace.dir/myplace_main.cpp.o CMakeFiles/myplace.dir/parse_bookshelf.cpp.o CMakeFiles/myplace.dir/MyPlace/myplace.cpp.o CMakeFiles/myplace.dir/Plot/plot.cpp.o -o myplace 
