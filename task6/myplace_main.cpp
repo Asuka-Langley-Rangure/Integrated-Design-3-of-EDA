@@ -18,10 +18,10 @@ int main(int argc, char *argv[])
     fs::path exe_dir = fs::current_path();     // 当前执行目录
     fs::path tmp_path;
     if (argc > 1) {
-        // 如果命令行传入路径参数，例如：./adaptec1/adaptec1.aux
+        // 如果命令行传入路径参数，例如：./adaptec4/adaptec4.aux
         tmp_path = fs::path(argv[1]);
     } else {
-        // 默认查找当前目录下的 adaptec5 文件夹
+        // 默认查找当前目录下的 adaptec1 文件夹
         tmp_path = exe_dir / "adaptec1" / "adaptec1.aux";
     }
 
@@ -32,13 +32,12 @@ int main(int argc, char *argv[])
     }
 
     MyPlacer *myplacer = new MyPlacer(db);
-    myplacer->createfillerCells();
-    myplacer->initializeBins(0.8);
+
     myplacer->initialPlacement();
 
     PLOTTING::plotPlacement("gp_result", db);
 
-    // PrintDatabaseSummary(db);
+    PrintDatabaseSummary(db);
     
     std::cout << "✅ Parsing and printing completed successfully." << std::endl;
     return 0;
