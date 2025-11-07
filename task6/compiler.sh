@@ -41,11 +41,11 @@ cmake --build "${BUILD_DIR}" -- -j"${JOBS}"
 # ------------------------------------------------------------
 # 4️⃣ 定位并移动可执行文件
 # ------------------------------------------------------------
-BIN_PATH="$(find "${BUILD_DIR}" -type f -executable -name "myplace" | head -n1 || true)"
-TARGET_BIN="${PROJECT_ROOT}/myplace"
+BIN_PATH="$(find "${BUILD_DIR}" -type f -executable -name "myplace_exe" | head -n1 || true)"
+TARGET_BIN="${PROJECT_ROOT}/myplace_exe"
 
 if [[ -z "${BIN_PATH}" ]]; then
-  echo "❌ 未找到可执行文件 myplace"
+  echo "❌ 未找到可执行文件 myplace_exe"
   exit 1
 fi
 

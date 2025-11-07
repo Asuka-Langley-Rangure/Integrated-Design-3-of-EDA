@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 project(myplacement)
 
 add_executable(
-    myplace
+    myplace_exe
     myplace_main.cpp
     parse_bookshelf.cpp
     ${PROJECT_SOURCE_DIR}/MyPlace/myplace.cpp
@@ -11,7 +11,7 @@ add_executable(
 )
 
 # 3) 头文件路径（注意：eigen3 指到“包含 Eigen/ 子目录的那层”）
-target_include_directories(myplace PRIVATE
+target_include_directories(myplace_exe PRIVATE
     ${PROJECT_SOURCE_DIR}/MyPlace
     ${PROJECT_SOURCE_DIR}/PlaceData
     ${PROJECT_SOURCE_DIR}/Common
