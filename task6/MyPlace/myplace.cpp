@@ -185,14 +185,8 @@ void MyPlacer::initialPlacement() {
                 movableMods[i]->center.y = Y[i];
             }
 
-            // （可选）阻尼更新，进一步避免“拉丝抖动”
-            // double alpha = 0.6;  // 0<alpha<=1
-            // movableMods[i]->center.x = (1-alpha)*oldX + alpha*X[i]; // 同理 Y
-
-            // 固定视口绘图（防止每帧缩放变化造成“拉丝错觉”）
             PLOTTING::plotPlacement("iteration/iter_" + std::to_string(it), db);
 
-            // 合并残差收敛： ||A_blk Z - b_blk|| / (||b_blk||+eps)
             double r = (A_blk * Z - b_blk).norm();
             double denom = std::max(1e-12, b_blk.norm());
             if (r / denom <= tol_total) {
