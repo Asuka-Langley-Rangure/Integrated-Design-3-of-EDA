@@ -55,12 +55,12 @@ public:
         isFixed = false;
      };
 
-    POS_2D getLL_2D()
+    POS_2D getLL_2D() const
     {
         return coor;
     };
 
-    POS_2D getUR_2D()
+    POS_2D getUR_2D() const
     {
         POS_2D ur_2D;
 

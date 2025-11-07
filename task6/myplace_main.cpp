@@ -33,11 +33,19 @@ int main(int argc, char *argv[])
 
     MyPlacer *myplacer = new MyPlacer(db);
 
+    std::cout << "-----------任务2------------" << endl;
+
+    PrintDatabaseSummary(db);
+
+    std::cout << "-----------任务3------------" << endl;
+
+    printDesignSummary(db, 512, 512, -1.0);
+
+    std::cout << "-----------任务4------------" << endl;
+
     myplacer->initialPlacement();
 
     PLOTTING::plotPlacement("gp_result", db);
-
-    PrintDatabaseSummary(db);
     
     std::cout << "✅ Parsing and printing completed successfully." << std::endl;
     return 0;

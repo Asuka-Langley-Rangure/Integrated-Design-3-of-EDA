@@ -43,4 +43,7 @@ void PrintPlaceData(const PlaceData* db);
 // 解析 BOOKSHELF 数据集
 bool ParseBookshelfDataset(const fs::path tmp_path, PlaceData* db);
 
+// 任务三的输出设计总结函数
+void printDesignSummary(const PlaceData* db, int binRows, int binCols, double binAddTimeSec);
+
 #endif

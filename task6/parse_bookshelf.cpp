@@ -439,3 +439,188 @@ bool ParseBookshelfDataset(const fs::path tmp_path, PlaceData* db) {
     }
     return true;
 }
+
+static inline double rect_area(double w, double h){ return (w>0 && h>0) ? w*h : 0.0; }
+
+// 从 SiteRow 推导核心区；若没有 SiteRow，则用模块包围盒兜底
+static void infer_core_from_rows(const PlaceData* db,
+                                 double& llx, double& lly,
+                                 double& urx, double& ury,
+                                 double& row_h_out, int& row_n_out, double& site_step_out)
+{
+    llx =  std::numeric_limits<double>::infinity();
+    lly =  std::numeric_limits<double>::infinity();
+    urx = -std::numeric_limits<double>::infinity();
+    ury = -std::numeric_limits<double>::infinity();
+    std::vector<double> row_h;
+    std::vector<double> steps;
+
+    for (const auto& r : db->SiteRows) {
+        double x0 = r.start.x, y0 = r.start.y;
+        double x1 = r.end.x,   y1 = r.end.y + r.height; // end 为行末右下角，+height 得到上边界
+        llx = std::min(llx, std::min(x0, x1));
+        lly = std::min(lly, std::min(y0, y1));
+        urx = std::max(urx, std::max(x0, x1));
+        ury = std::max(ury, std::max(y0, y1));
+        if (r.height > 0) row_h.push_back(r.height);
+        if (r.step   > 0) steps.push_back(r.step);
+    }
+    if (!std::isfinite(llx)) { // 无 SiteRow，用模块兜底
+        llx =  std::numeric_limits<double>::infinity();
+        lly =  std::numeric_limits<double>::infinity();
+        urx = -std::numeric_limits<double>::infinity();
+        ury = -std::numeric_limits<double>::infinity();
+        for (const Module* m : db->Nodes) {
+            if (!m) continue;
+            POS_2D ll = m->getLL_2D();
+            POS_2D ur = m->getUR_2D();
+            llx = std::min( llx, static_cast<double>(ll.x) );
+            lly = std::min( lly, static_cast<double>(ll.y) );
+            urx = std::max( urx, static_cast<double>(ur.x) );
+            ury = std::max( ury, static_cast<double>(ur.y) );
+
+        }
+        if (!std::isfinite(llx)) { llx=lly=0; urx=ury=1; }
+    }
+    auto median = [](std::vector<double>& v)->double{
+        if (v.empty()) return 0.0;
+        std::nth_element(v.begin(), v.begin()+v.size()/2, v.end());
+        return v[v.size()/2];
+    };
+    row_h_out      = median(row_h);
+    row_n_out      = static_cast<int>(db->SiteRows.size());
+    site_step_out  = steps.empty() ? 1.0 : median(steps);
+}
+
+static void degree_buckets(const PlaceData* db,
+                           long long& d2, long long& d3_10,
+                           long long& d11_100, long long& d100p, int& dmax)
+{
+    d2=d3_10=d11_100=d100p=0; dmax=0;
+    for (const Net* net : db->Nets) {
+        if (!net) continue;
+        int d = (int)net->netPins.size();
+        dmax = std::max(dmax, d);
+        if (d==2) ++d2;
+        else if (d>=3 && d<=10) ++d3_10;
+        else if (d>=11 && d<=100) ++d11_100;
+        else if (d>100) ++d100p;
+    }
+}
+
+static inline void print_percent(double num, double den){
+    double p = (den>0.0 ? 100.0*num/den : 0.0);
+    std::cout<<std::fixed<<std::setprecision(2)<<p<<"%";
+}
+
+// 主入口：输出与截图一致的概要
+// binRows/binCols：你最终建 bin 的尺寸；binAddTimeSec：若没有可传负数
+void printDesignSummary(const PlaceData* db, int binRows=512, int binCols=512, double binAddTimeSec=-1.0)
+{
+    using std::cout; using std::endl;
+
+    if (!db) { std::cerr << "[printDesignSummary] db is null\n"; return; }
+
+    // 1) Core 区域
+    double llx,lly,urx,ury,rowH,siteStep; int rowN;
+    infer_core_from_rows(db, llx,lly,urx,ury, rowH,rowN,siteStep);
+    const double coreW = std::max(0.0, urx-llx);
+    const double coreH = std::max(0.0, ury-lly);
+    const double coreA = coreW * coreH;
+
+    // 2) 模块统计（按你的 Module 字段）
+    long long cellCnt=0, fixedCnt=0, macroCnt=0;
+    double movableA=0.0, fixedA_in_core=0.0, totalUsedA=0.0;
+
+    auto overlap_with_core = [&](const Module* m)->bool{
+        POS_2D mll = m->getLL_2D();
+        POS_2D mur = m->getUR_2D();
+        double ix0 = std::max<double>(llx, mll.x);
+        double iy0 = std::max<double>(lly, mll.y);
+        double ix1 = std::min<double>(urx, mur.x);
+        double iy1 = std::min<double>(ury, mur.y);
+        return (ix1>ix0 && iy1>iy0);
+    };
+
+    for (const Module* m : db->Nodes) {
+        if (!m) continue;
+        const double a = rect_area(m->width, m->height);
+        if (a<=0.0) continue;
+        ++cellCnt;
+        if (m->isMacro) ++macroCnt;
+        if (m->isFixed || m->isTerminal) {
+            ++fixedCnt;
+            if (overlap_with_core(m)) fixedA_in_core += a;
+        } else {
+            movableA += a;
+        }
+        totalUsedA += a;
+    }
+
+    // 3) 网络与引脚
+    const long long netCnt = (long long)db->Nets.size();
+    // pin 总数：按 netPins 累加（PlaceData 里如果也有 Pins，可替换为 db->Pins.size()）
+    long long pinCnt = 0;
+    for (const Net* net : db->Nets) if (net) pinCnt += (long long)net->netPins.size();
+
+    long long d2,d3_10,d11_100,d100p; int dmax;
+    degree_buckets(db, d2,d3_10,d11_100,d100p, dmax);
+
+    // 4) 利用率与密度
+    const double freeSites = std::max(0.0, coreA - fixedA_in_core);
+    const double placeUtil = (freeSites>0 ? movableA / freeSites : 0.0);
+    const double coreDensity = (coreA>0 ? (movableA + fixedA_in_core) / coreA : 0.0);
+
+    // 5) Bin 参数（若尚未建 bin，就按维度估算步长）
+    const double stepX = (binCols>0 ? coreW / binCols : 0.0);
+    const double stepY = (binRows>0 ? coreH / binRows : 0.0);
+
+    // === 输出 ===
+    cout << u8"●  Overview:" << endl;
+    cout << "Core region: lower left: (" << (long long)llx << "," << (long long)lly
+         << ") to upper right: (" << (long long)urx << "," << (long long)ury << ")" << endl;
+    cout << "Row Height/Number: " << (long long)rowH << " / " << rowN
+         << " (site step " << std::fixed << std::setprecision(6) << siteStep << ")" << endl;
+    cout << "Core Area: " << (long long)coreA << " (" << std::scientific << coreA << std::defaultfloat << ")" << endl;
+
+    cout << "Cell Area: " << (long long)totalUsedA << " (";
+    print_percent(totalUsedA, coreA); cout << ")" << endl;
+
+    cout << "Movable Area: " << (long long)movableA << " (";
+    print_percent(movableA, coreA); cout << ")" << endl;
+
+    cout << endl;
+    cout << "Fixed Area: " << (long long)fixedA_in_core << " (";
+    print_percent(fixedA_in_core, coreA); cout << ")" << endl;
+
+    cout << "Fixed Area in Core: " << (long long)fixedA_in_core << " (";
+    print_percent(fixedA_in_core, coreA); cout << ")" << endl;
+
+    cout << "Placement Util.: " << std::fixed << std::setprecision(2)
+         << (100.0*placeUtil) << "% (=move/freeSites)" << endl;
+
+    cout << "Core Density: " << std::fixed << std::setprecision(2)
+         << (100.0*coreDensity) << "% (=usedArea/core)" << endl;
+
+    cout << "Cell #: " << cellCnt << " (=~cells)" << endl;
+
+    cout << "Object #: " << cellCnt
+         << " (=~cells) (fixed: " << fixedCnt << ") (macro: " << macroCnt << ")" << endl;
+
+    cout << "Net #: " << netCnt << endl;
+    cout << "Max net degree==: " << dmax << endl;
+
+    cout << "Pin 2 (" << d2 << ") 3-10 (" << d3_10 << ") 11-100 (" << d11_100
+         << ") 100- (" << d100p << ")" << endl;
+
+    cout << "Pin #: " << pinCnt << endl;
+
+    cout << endl;
+    cout << u8"●  Bin Setting:" << endl;
+    cout << "Bin dimension: [" << binRows << "," << binCols << "]" << endl;
+    cout << "coreRegion width: "  << (long long)coreW << endl;
+    cout << "coreRegion height: " << (long long)coreH << endl;
+    cout << "Bin step: [" << std::fixed << std::setprecision(4) << stepX << "," << stepY << "]" << endl;
+    if (binAddTimeSec >= 0.0)
+        cout << "Bin add time: " << std::fixed << std::setprecision(6) << binAddTimeSec << endl;
+}
