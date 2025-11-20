@@ -55,11 +55,6 @@ public:
         
     PlaceData *db;
 
-    vector<VECTOR_3D> wirelengthGradient; 
-    vector<VECTOR_3D> densityGradient;   
-    vector<VECTOR_3D> totalGradient;      
-    vector<VECTOR_3D> fillerGradient;
-
     void initialPlacement();
 
 };
