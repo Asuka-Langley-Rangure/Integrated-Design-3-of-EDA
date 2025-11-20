@@ -429,7 +429,7 @@ bool ParseBookshelfDataset(const fs::path tmp_path, PlaceData* db) {
             xmax = std::max(xmax, static_cast<double>(r.end.x));
             ymax = std::max(ymax, static_cast<double>(r.bottom + r.height));
         }
-
+        
         db->chipRegion.ll = POS_2D(float(xmin), float(ymin));
         db->chipRegion.ur = POS_2D(float(xmax), float(ymax));
     }

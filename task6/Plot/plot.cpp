@@ -140,6 +140,9 @@ void PLOTTING::plotPlacement(std::string imageName, PlaceData* db)
                                 Red;
 
         img.draw_rectangle(x_left, y_top, x_right, y_bottom, color_fill, opacity);
+        // if (color_fill == Red){
+        //     std::cout << "x_left: " << x_left << ", y_top: " << y_top << ", x_right: " << x_right << ", y_bottom: " << y_bottom << std::endl;
+        // }
     }
 
     // 5) 标题与输出

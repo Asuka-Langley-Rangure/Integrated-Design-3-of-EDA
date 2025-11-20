@@ -35,11 +35,11 @@ int main(int argc, char *argv[])
 
     std::cout << "-----------任务2------------" << endl;
 
-    PrintDatabaseSummary(db);
+    //PrintDatabaseSummary(db);
 
     std::cout << "-----------任务3------------" << endl;
 
-    printDesignSummary(db, 512, 512, -1.0);
+    //printDesignSummary(db, 512, 512, -1.0);
 
     std::cout << "-----------任务4------------" << endl;
 
