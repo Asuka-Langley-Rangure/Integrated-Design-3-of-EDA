@@ -83,7 +83,7 @@ void MyPlacer::initialPlacement()
     };
 
     // -------------------- 2. 迭代求解：w 中包含 x，需要多次迭代 --------------------
-    const int    maxOuterIters = 50;      // 外层最多迭代次数（逻辑不变，只给足一点余量）
+    const int    maxOuterIters = 30;      // 外层最多迭代次数（逻辑不变，只给足一点余量）
     const double distMin       = 25.0;    // Bound2Bound 距离下界
     const double lambdaDiag    = 1e-8;    // 小对角正则
     const double cgTol         = 1e-8;    // BiCGSTAB 收敛阈值
