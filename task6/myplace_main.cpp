@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
     myplacer->initialPlacement();
 
     PLOTTING::plotPlacement("gp_result", db);
+
+    PrintPlaceData(db);
     
     std::cout << "✅ Parsing and printing completed successfully." << std::endl;
     return 0;
