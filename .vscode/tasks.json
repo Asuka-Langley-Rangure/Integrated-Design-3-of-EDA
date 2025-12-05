@@ -1,0 +1,47 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+             "type": "cppbuild",
+             "label": "MinGW build",
+             "command": "gcc",
+             "args": [
+                 "-g",
+                 "-Wall",
+                 "${file}",
+                 "-o",
+                 "${fileDirname}/${fileBasenameNoExtension}.exe"
+             ],
+             "options": {
+                 "cwd": "${fileDirname}"
+             },
+             "problemMatcher": [
+                 "$gcc"
+             ],
+             "group": "build",
+             "detail": "compiler: gcc"
+         },
+         {
+             "type": "cppbuild",
+             "label": "gcc build",
+             "command": "gcc",
+             "args": [
+                 "-g",
+                 "-Wall",
+                 "-fsanitize=address",
+                 "${file}",
+				 "-std=c++23",
+                 "-o",
+                 "${workspaceFolder}/build/placementDesigner"
+             ],
+             "options": {
+                 "cwd": "${fileDirname}"
+             },
+             "problemMatcher": [
+                 "$gcc"
+             ],
+             "group": "build",
+             "detail": "compiler: gcc"
+         }
+	]
+}

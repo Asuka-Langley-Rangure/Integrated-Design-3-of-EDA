@@ -1,0 +1,45 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug placementDesigner (WSL)",
+      "type": "cppdbg",
+      "request": "launch",
+
+      // ✅ 你的可执行文件路径（确认名字是否匹配）
+      "program": "${workspaceFolder}/build/placementDesigner",
+
+      // ✅ 如果程序需要命令行参数，这里可以加
+      "args": [],
+
+      // ✅ 从程序开头暂停（false 表示直接运行）
+      "stopAtEntry": false,
+
+      // ✅ 工作目录，设为 build 目录（即程序运行目录）
+      "cwd": "${workspaceFolder}/build",
+
+      // ✅ 环境变量，可留空
+      "environment": [],
+
+      // ✅ 是否弹出外部控制台窗口（WSL 推荐 true）
+      "externalConsole": true,
+
+      // ✅ 调试器模式与路径
+      "MIMode": "gdb",
+      //"miDebuggerPath": "/usr/bin/gdb",
+
+      // ✅ 是否在启动前自动构建
+      // 如果你不想每次都自动 make，可以注释掉
+      //"preLaunchTask": "CMake Build",
+
+      // ✅ GDB 美化打印（比如显示 STL 容器）
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
