@@ -73,5 +73,6 @@
         "valarray": "cpp",
         "variant": "cpp",
         "iterativelinearsolvers": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/czs/桌面/placement_project/MyPlacement_v4.0_Nesterov"
 }
