@@ -1,30 +1,28 @@
 #include "NesterovOpt.h"
-#include <cmath>
-#include <cstdio>
+
+// ================ NSIter ================
+
+void NSIter::resize(std::size_t length)
+{
+    main_solution.resize(length);
+    reference_solution.resize(length);
+    gradient.resize(length);
+}
+
+// ================ NesterovOpt 私有工具函数 ================
 
 void NesterovOpt::pushPositionToPlacer(const std::vector<VECTOR_3D> &pos)
 {
-    // 将位置写回 MyPlacer / PlaceData
-    // 保证 db 中的 NodesAndFillers 中心坐标与 pos 一致
+    // 写回 MyPlacer/PlaceData
     placer->setPosition(pos);
 }
 
 void NesterovOpt::pullGradientFromPlacer(std::vector<VECTOR_3D> &grad)
 {
-    // 这里使用的是 MyPlacer::totalGradient，
-    // 在 GetTotalGradient() 中已经：
-    // 1) 计算线长梯度
-    // 2) 计算密度梯度
-    // 3) 按 f = WL + λD 做线性叠加
-    // 4) 做了预条件（preconditioner）
-    // 5) **取了负号，使其成为“下降方向”**
-    const std::vector<VECTOR_3D> &g_src = placer->totalGradient;
-
-    grad.resize(g_src.size());
-    for (std::size_t i = 0; i < g_src.size(); ++i)
-    {
-        grad[i] = g_src[i];
-    }
+    const std::vector<VECTOR_3D> &src = placer->totalGradient;
+    grad.resize(src.size());
+    for (std::size_t i = 0; i < src.size(); ++i)
+        grad[i] = src[i];
 }
 
 double NesterovOpt::computeStepLength(const std::vector<VECTOR_3D> &v_new,
@@ -32,176 +30,287 @@ double NesterovOpt::computeStepLength(const std::vector<VECTOR_3D> &v_new,
                                       const std::vector<VECTOR_3D> &g_new,
                                       const std::vector<VECTOR_3D> &g_old) const
 {
-    // 对应 pdf 式 (33) 之后的步长估计：
-    // α̂_{k+1} = ||v^{k+1} - v^k|| / ||∇f_pre(v^{k+1}) - ∇f_pre(v^k)||
     double num = 0.0;
     double den = 0.0;
+    std::size_t n = v_new.size();
 
-    const std::size_t n = v_new.size();
     for (std::size_t i = 0; i < n; ++i)
     {
-        double dx = static_cast<double>(v_new[i].x) -
-                    static_cast<double>(v_old[i].x);
-        double dy = static_cast<double>(v_new[i].y) -
-                    static_cast<double>(v_old[i].y);
+        double dx = static_cast<double>(v_new[i].x) - static_cast<double>(v_old[i].x);
+        double dy = static_cast<double>(v_new[i].y) - static_cast<double>(v_old[i].y);
         num += dx * dx + dy * dy;
 
-        double dgx = static_cast<double>(g_new[i].x) -
-                     static_cast<double>(g_old[i].x);
-        double dgy = static_cast<double>(g_new[i].y) -
-                     static_cast<double>(g_old[i].y);
+        double dgx = static_cast<double>(g_new[i].x) - static_cast<double>(g_old[i].x);
+        double dgy = static_cast<double>(g_new[i].y) - static_cast<double>(g_old[i].y);
         den += dgx * dgx + dgy * dgy;
     }
 
-    if (den <= 0.0)
+    if (den <= 0.0 || num <= 0.0)
         return 0.0;
 
     return std::sqrt(num / den);
 }
 
+// 直接在 NesterovOpt 里实现 HPWL 计算（用 db->Nets）
+double NesterovOpt::computeHPWLFromDB() const
+{
+    if (!placer || !placer->db) return 0.0;
+
+    PlaceData *db = placer->db;
+    double total = 0.0;
+
+    for (Net *net : db->Nets)
+    {
+        if (!net) continue;
+        const std::vector<Pin*> &pins = net->netPins;
+        int P = static_cast<int>(pins.size());
+        if (P < 2) continue;
+
+        double minX = 0.0, maxX = 0.0;
+        double minY = 0.0, maxY = 0.0;
+        bool first = true;
+
+        for (Pin *p : pins)
+        {
+            if (!p || !p->module) continue;
+            Module *m = p->module;
+
+            double cx = m->center.x;
+            double cy = m->center.y;
+            double px = cx + p->offset.x;
+            double py = cy + p->offset.y;
+
+            if (first)
+            {
+                minX = maxX = px;
+                minY = maxY = py;
+                first = false;
+            }
+            else
+            {
+                if (px < minX) minX = px;
+                if (px > maxX) maxX = px;
+                if (py < minY) minY = py;
+                if (py > maxY) maxY = py;
+            }
+        }
+        if (!first)
+            total += (maxX - minX) + (maxY - minY);
+    }
+    return total;
+}
+
+void NesterovOpt::updateLambda(double curHPWL)
+{
+    // pdf 式 (37)：λ_k = μ_k * λ_{k-1}
+    // μ_k = 1.1 - (ΔHPWL_k / ΔHPWL_REF) + 1.0
+    // ΔHPWL_REF = 3.5e5
+    const double DELTA_HPWL_REF = 3.5e5;
+
+    double deltaHPWL = curHPWL - lastHPWL;
+    double mu_k = 1.1 - (deltaHPWL / DELTA_HPWL_REF) + 1.0;
+
+    // 做一点裁剪，避免 λ 变成负数或者爆炸
+    if (mu_k < 0.5) mu_k = 0.5;
+    if (mu_k > 2.0) mu_k = 2.0;
+
+    placer->lambda = static_cast<float>(placer->lambda * mu_k);
+    lastHPWL = curHPWL;
+}
+
+// ================ NesterovOpt::init ================
+
 void NesterovOpt::init()
 {
     iter_count   = 0;
-    NS_opt_param = 1.0f;     // Nesterov 参数 t_0
-    step_alpha   = 1e-3f;    // 初始步长，会在后续迭代中自适应更新
+    NS_opt_param = 1.0f;    // β_0
+    step_alpha   = 1e-3f;   // 初始步长猜一个较小值
 
-    // 读取当前模块位置（包括 Cells + Fillers），作为 u^0 = v^0
-    std::vector<VECTOR_3D> initPos = placer->getPosition();
+    // 1) 先尝试直接拿位置
+    std::vector<VECTOR_3D> pos = placer->getPosition();
 
-    cur_iter.resize(initPos.size());
-    last_iter.resize(initPos.size());
+    // 如果位置为空，很可能没有调用 MyPlacer::Init()，按 pdf 流程自动初始化一次
+    if (pos.empty())
+    {
+        placer->Init();              // 里面会 FillerInit / BinInit / gradient init
+        pos = placer->getPosition();
+    }
 
-    cur_iter.main_solution      = initPos;   // u^0
-    cur_iter.reference_solution = initPos;   // v^0
+    cur_iter.resize(pos.size());
+    last_iter.resize(pos.size());
 
-    // 把参考位置写回 db，保证 MyPlacer 中的位置一致
+    if (pos.empty())
+    {
+        // 说明 NodesAndFillers 真的是空的（比如没有节点），直接退出
+        lastHPWL = 0.0;
+        std::printf("[Nesterov] init: numVars = 0 (no movable nodes)\n");
+        return;
+    }
+
+    // u^0 = v^0 = 当前位置
+    cur_iter.main_solution      = pos;
+    cur_iter.reference_solution = pos;
+
+    // 写回 db，保证 MyPlacer 中和 Nesterov 一致
     pushPositionToPlacer(cur_iter.reference_solution);
 
     // 计算初始梯度 ∇f_pre(v^0)
     placer->GetTotalGradient();
     pullGradientFromPlacer(cur_iter.gradient);
 
-    // 初始时 last_iter 与 cur_iter 保持一致
+    // 初始时 last_iter = cur_iter
     last_iter = cur_iter;
 
+    // 初始 HPWL，用于之后的 ΔHPWL_k 和 lambda 更新
+    lastHPWL = computeHPWLFromDB();
+
     std::printf("[Nesterov] init: numVars = %d\n",
-                static_cast<int>(initPos.size()));
+                (int)cur_iter.reference_solution.size());
 }
+
+// ================ NesterovOpt::NAG_Step ================
 
 void NesterovOpt::NAG_Step()
 {
-    const std::size_t n = cur_iter.main_solution.size();
-    if (n == 0)
-        return;
+    std::size_t n = cur_iter.reference_solution.size();
+    if (n == 0) return;
 
     NSIter new_iter;
     new_iter.resize(n);
 
-    // ---- 3-3-1-1：计算 u^{k+1}
-    //
-    // pdf 中公式： û^{k+1} = v^k - α^k * ∇f_pre(v^k)
-    // 由于 MyPlacer::totalGradient 已经是“下降方向”（即 -∇f），
-    // 这里用：
-    //     u^{k+1} = v^k + α^k * gradient
-    for (std::size_t i = 0; i < n; ++i)
+    // ---- 步骤 3-1：用 v_k, v_{k-1}, g_k, g_{k-1} 估计 Lipschitz L_k 并更新 α_k ----
+    if (iter_count > 0)
     {
-        const VECTOR_3D &vk = cur_iter.reference_solution[i];
-        const VECTOR_3D &gk = cur_iter.gradient[i];
-
-        new_iter.main_solution[i].x = vk.x + step_alpha * gk.x;
-        new_iter.main_solution[i].y = vk.y + step_alpha * gk.y;
-        new_iter.main_solution[i].z = 0.0f; // 2D 布局，z 置 0
+        double Lk = computeStepLength(cur_iter.reference_solution,
+                                      last_iter.reference_solution,
+                                      cur_iter.gradient,
+                                      last_iter.gradient);
+        if (Lk > 0.0)
+            step_alpha = static_cast<float>(1.0 / Lk);
     }
 
-    // ---- 3-3-1-2：计算 v^{k+1}
-    //
-    // pdf 中公式 (34)： v̂^{k+1} = û^{k+1} + β * (û^{k+1} - u^k)
-    // 这里采用常用的 Nesterov / FISTA 形式更新 β_k：
-    //
-    //   t_{k+1} = (1 + sqrt(1 + 4 t_k^2)) / 2
-    //   β_k     = (t_k - 1) / t_{k+1}
-    //
-    float t_prev = NS_opt_param;
-    float t_new  = 0.5f * (1.0f + std::sqrt(1.0f + 4.0f * t_prev * t_prev));
-    float beta   = (t_prev - 1.0f) / t_new;
+    // ---- 步骤 3-2：更新“动量系数” β_{k+1}（FISTA 形式）----
+    float beta_prev = NS_opt_param;
+    float beta_new  = 0.5f * (1.0f + std::sqrt(1.0f + 4.0f * beta_prev * beta_prev));
 
-    for (std::size_t i = 0; i < n; ++i)
+    // ---- 步骤 3-3：带回溯的预测位置 ----
+    float alpha_k = step_alpha;
+
+    while (true)
     {
-        const VECTOR_3D &uk_old = cur_iter.main_solution[i];
-        const VECTOR_3D &uk_new = new_iter.main_solution[i];
-
-        new_iter.reference_solution[i].x =
-            uk_new.x + beta * (uk_new.x - uk_old.x);
-        new_iter.reference_solution[i].y =
-            uk_new.y + beta * (uk_new.y - uk_old.y);
-        new_iter.reference_solution[i].z = 0.0f;
-    }
-
-    // ---- 用 v^{k+1} 写回 db，并重新计算梯度与密度（包括溢出）
-    pushPositionToPlacer(new_iter.reference_solution);
-    placer->GetTotalGradient();
-    pullGradientFromPlacer(new_iter.gradient);
-
-    // ---- 3-3-4：基于 Lipschitz 估计更新步长 α_{k+1}
-    double alpha_new = computeStepLength(
-        new_iter.reference_solution,
-        cur_iter.reference_solution,
-        new_iter.gradient,
-        cur_iter.gradient);
-
-    if (alpha_new > 0.0)
-    {
-        // 3-3-5：回溯条件（对应 pdf 中 α^k > ε·α̂^{k+1}）
-        //
-        // 如果新估计的步长太小，则用 BKTRK_EPS 做一个缓和，
-        // 防止步长在迭代初期骤降过快。
-        if (step_alpha > BKTRK_EPS * alpha_new)
+        // 3-3-1-1：û^{k+1} = v^k - α_k ∇f_pre(v^k)
+        // 注意：totalGradient 已经是“下降方向”，所以这里写成 v_k + α_k * gradient
+        for (std::size_t i = 0; i < n; ++i)
         {
-            step_alpha = BKTRK_EPS * static_cast<float>(alpha_new);
+            const VECTOR_3D &vk = cur_iter.reference_solution[i];
+            const VECTOR_3D &gk = cur_iter.gradient[i];
+
+            new_iter.main_solution[i].x = vk.x + alpha_k * gk.x;
+            new_iter.main_solution[i].y = vk.y + alpha_k * gk.y;
+            new_iter.main_solution[i].z = 0.0f;
+        }
+
+        // 3-3-1-2：v̂^{k+1} = û^{k+1} + (β_k - 1)/β_{k+1} * (û^{k+1} - u^k)
+        float momentum = 0.0f;
+        if (iter_count > 0)
+            momentum = (beta_prev - 1.0f) / beta_new;
+        else
+            momentum = 0.0f;
+
+        for (std::size_t i = 0; i < n; ++i)
+        {
+            const VECTOR_3D &u_old = cur_iter.main_solution[i];
+            const VECTOR_3D &u_new = new_iter.main_solution[i];
+
+            new_iter.reference_solution[i].x =
+                u_new.x + momentum * (u_new.x - u_old.x);
+            new_iter.reference_solution[i].y =
+                u_new.y + momentum * (u_new.y - u_old.y);
+            new_iter.reference_solution[i].z = 0.0f;
+        }
+
+        // 3-3-2：用 v̂^{k+1} 更新 db 中位置
+        pushPositionToPlacer(new_iter.reference_solution);
+
+        // 3-3-3：重新计算梯度 ∇f_pre(v̂^{k+1})
+        placer->GetTotalGradient();
+        pullGradientFromPlacer(new_iter.gradient);
+
+        // 3-3-4：计算 α̂_{k+1}
+        double alpha_hat_next = computeStepLength(
+            new_iter.reference_solution,
+            cur_iter.reference_solution,
+            new_iter.gradient,
+            cur_iter.gradient);
+
+        if (alpha_hat_next <= 0.0)
+        {
+            // 无法估计 Lipschitz，就用当前 alpha 直接接受
+            break;
+        }
+
+        // 3-3-5：判断 α_k > ε * α̂_{k+1} ？（pdf 式 35）
+        if (alpha_k > BKTRK_EPS * alpha_hat_next)
+        {
+            // 需要缩小步长：α_k = α̂_{k+1}，重新回到 3-3
+            alpha_k = static_cast<float>(alpha_hat_next);
+            continue;
         }
         else
         {
-            step_alpha = static_cast<float>(alpha_new);
+            // 满足回溯条件，接受当前 α_k，更新 β_k = β_{k+1}
+            step_alpha   = alpha_k;
+            NS_opt_param = beta_new;
+            break;
         }
     }
 
-    // ---- 更新迭代状态
-    last_iter    = cur_iter;
-    cur_iter     = new_iter;
-    NS_opt_param = t_new;
+    // 此时 new_iter 即为 (u^{k+1}, v^{k+1}, g^{k+1})，db 里也已经是 v^{k+1} 的位置
+
+    // ---- 步骤 4：更新 λ（需要 HPWL 变化）----
+    double curHPWL = computeHPWLFromDB();
+    updateLambda(curHPWL);
+
+    // ---- 更新迭代状态 ----
+    last_iter = cur_iter;
+    cur_iter  = new_iter;
     ++iter_count;
 
-    std::printf("[Nesterov] iter = %zu, step = %.3e, overflow = %.6f\n",
+    std::printf("[Nesterov] iter = %zu, step = %.3e, overflow = %.6f, HPWL = %.6f\n",
                 iter_count,
                 static_cast<double>(step_alpha),
-                static_cast<double>(placer->globalDensityOverflow));
+                static_cast<double>(placer->globalDensityOverflow),
+                curHPWL);
 }
+
+// ================ NesterovOpt::NAG_Process ================
 
 void NesterovOpt::NAG_Process()
 {
-    if (!placer)
-        return;
+    if (!placer) return;
 
     float targetOverflow = placer->targetOverflow;
 
     init();
 
+    std::size_t n = cur_iter.reference_solution.size();
     std::printf("[Nesterov] start: targetOverflow = %.6f\n",
                 static_cast<double>(targetOverflow));
 
-    // pdf 3.1：停止条件
-    // 1) 全局密度溢出 τ < τ_min(targetOverflow)
-    // 2) 迭代次数 > 最大迭代次数
-    //
-    // 因此循环条件应为：
-    // while (溢出仍然偏大 && 还没到最大迭代次数)
+    if (n == 0)
+    {
+        std::printf("[Nesterov] no variables to optimize, skip.\n");
+        return;
+    }
+
+    // pdf 3.1：溢出 > 目标 且 未超过最大迭代次数 时继续迭代
     while (placer->globalDensityOverflow > targetOverflow &&
            iter_count < MAX_ITERATION)
     {
         NAG_Step();
     }
 
-    // 最后再将当前参考解写回 db（防止最后一次没有同步）
+    // 最后再把参考解写回 db，防止遗漏
     pushPositionToPlacer(cur_iter.reference_solution);
 
     std::printf("[Nesterov] finish: iter = %zu, finalOverflow = %.6f\n",

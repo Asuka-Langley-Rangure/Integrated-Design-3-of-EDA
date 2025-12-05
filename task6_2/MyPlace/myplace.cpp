@@ -88,7 +88,7 @@ void MyPlacer::initialPlacement()
     };
 
     // -------------------- 2. 迭代求解参数 --------------------
-    const int    maxOuterIters = 20;      // 外层最多迭代次数
+    const int    maxOuterIters = 2;      // 外层最多迭代次数
     const double distMin       = 25.0;    // Bound2Bound 距离下界
     const double lambdaDiag    = 1e-8;    // 小对角正则
     const double cgTol         = 1e-8;    // 迭代解收敛阈值
@@ -738,23 +738,25 @@ void MyPlacer::GetWirelengthGradient()
 {
     
 }
-void MyPlacer::GetBinDensity()     // 计算每个网格的密度
-{                                          
+
+void MyPlacer::GetBinDensity()
+{
+    // 1. 清零每个 bin 的 node/filler 密度
     for (int i = 0; i < binDimension.x; i++)
     {
         for (int j = 0; j < binDimension.y; j++)
         {
-            bins[i][j]->nodeDensity = 0;
+            bins[i][j]->nodeDensity   = 0;
             bins[i][j]->fillerDensity = 0;
         }
     }
 
-    for (Module *curNode : NodesAndFillers) // （node(标准单元、宏单元)+填充单元）
-    {        
-       
-        VECTOR_2D localSmoothLengthScale; 
-        localSmoothLengthScale.x = 1;
-        localSmoothLengthScale.y = 1;
+    // 2. 遍历所有 node + filler
+    for (Module *curNode : NodesAndFillers)
+    {
+        VECTOR_2D localSmoothLengthScale;
+        localSmoothLengthScale.x = 1.0f;
+        localSmoothLengthScale.y = 1.0f;
 
         CRect rectForCurNode;
         rectForCurNode.ll = curNode->getLL_2D();
@@ -762,58 +764,79 @@ void MyPlacer::GetBinDensity()     // 计算每个网格的密度
 
         POS_3D cellCenter = curNode->getCenter();
 
-        if (float_less(curNode->getWidth(), binStep.x))     // 如果当前单元的宽度小于单个网格宽度
+        // 小单元扩到一个 bin 大小（Kraftwerk2 的 smoothing）
+        if (float_less(curNode->getWidth(), binStep.x))
         {
             localSmoothLengthScale.x = curNode->getWidth() / binStep.x;
-            rectForCurNode.ll.x = cellCenter.x - 0.5 * binStep.x;   // 将单元宽度扩充到一个网格宽度
-            rectForCurNode.ur.x = cellCenter.x + 0.5 * binStep.x;   // 计算单元密度时需要单元宽度高度大于单个网格宽高度
+            rectForCurNode.ll.x = cellCenter.x - 0.5f * binStep.x;
+            rectForCurNode.ur.x = cellCenter.x + 0.5f * binStep.x;
         }
         if (float_less(curNode->getHeight(), binStep.y))
         {
             localSmoothLengthScale.y = curNode->getHeight() / binStep.y;
-            rectForCurNode.ll.y = cellCenter.y - 0.5 * binStep.y;
-            rectForCurNode.ur.y = cellCenter.y + 0.5 * binStep.y;
+            rectForCurNode.ll.y = cellCenter.y - 0.5f * binStep.y;
+            rectForCurNode.ur.y = cellCenter.y + 0.5f * binStep.y;
         }
 
-        VECTOR_2D_INT binStartIdx; 
+        // 如果整个 rect 完全在 core 外面，直接跳过
+        if (rectForCurNode.ur.x <= db->coreRegion.ll.x ||
+            rectForCurNode.ll.x >= db->coreRegion.ur.x ||
+            rectForCurNode.ur.y <= db->coreRegion.ll.y ||
+            rectForCurNode.ll.y >= db->coreRegion.ur.y)
+        {
+            continue;
+        }
+
+        VECTOR_2D_INT binStartIdx;
         VECTOR_2D_INT binEndIdx;
-        binStartIdx.x = INT_DOWN((rectForCurNode.ll.x - db->coreRegion.ll.x) / binStep.x); // binStartIdx.x表示节点起始位置对应网格index
-        binEndIdx.x = INT_DOWN((rectForCurNode.ur.x - db->coreRegion.ll.x) / binStep.x);
+
+        binStartIdx.x = INT_DOWN((rectForCurNode.ll.x - db->coreRegion.ll.x) / binStep.x);
+        binEndIdx.x   = INT_DOWN((rectForCurNode.ur.x - db->coreRegion.ll.x) / binStep.x);
 
         binStartIdx.y = INT_DOWN((rectForCurNode.ll.y - db->coreRegion.ll.y) / binStep.y);
-        binEndIdx.y = INT_DOWN((rectForCurNode.ur.y - db->coreRegion.ll.y) / binStep.y);
+        binEndIdx.y   = INT_DOWN((rectForCurNode.ur.y - db->coreRegion.ll.y) / binStep.y);
 
-        if (binEndIdx.y >= binDimension.y)      // 如果节点分布在核心区域外
-        {
-            binEndIdx.y = binDimension.y - 1;   // 向区域内移动一个网格
-        }
+        // ---- 关键：对索引做边界裁剪 ----
+        // 如果结束索引都在 0 左边，或者起始索引都在最大右边，说明完全不在 core 内
+        if (binEndIdx.x < 0 || binEndIdx.y < 0) continue;
+        if (binStartIdx.x >= binDimension.x || binStartIdx.y >= binDimension.y) continue;
 
-        if (binEndIdx.x >= binDimension.x)
-        {
-            binEndIdx.x = binDimension.x - 1;
-        }
+        if (binStartIdx.x < 0)             binStartIdx.x = 0;
+        if (binStartIdx.y < 0)             binStartIdx.y = 0;
+        if (binEndIdx.x   >= binDimension.x) binEndIdx.x = binDimension.x - 1;
+        if (binEndIdx.y   >= binDimension.y) binEndIdx.y = binDimension.y - 1;
 
+        // 防御：如果裁剪完后 start > end，说明确实没交集
+        if (binStartIdx.x > binEndIdx.x || binStartIdx.y > binEndIdx.y)
+            continue;
 
+        // 3. 累加密度
         for (int i = binStartIdx.x; i <= binEndIdx.x; i++)
         {
-            for (int j = binStartIdx.y; j <= binEndIdx.y; j++)  // 遍历单元包含的所有网格
+            for (int j = binStartIdx.y; j <= binEndIdx.y; j++)
             {
-                // overlapArea为单个网格中的单元所占面积
-                float overlapArea = getOverlapArea_2D(bins[i][j]->ll, bins[i][j]->ur, rectForCurNode.ll, rectForCurNode.ur);
-                if (curNode->isMacro)   // 若当前节点是宏单元
-                {                       // qi=单元面积*targetDensity
-                    bins[i][j]->nodeDensity += localSmoothLengthScale.x * localSmoothLengthScale.y * targetDensity * overlapArea;
+                float overlapArea = getOverlapArea_2D(
+                    bins[i][j]->ll, bins[i][j]->ur,
+                    rectForCurNode.ll, rectForCurNode.ur);
+
+                if (overlapArea <= 0.0f)
+                    continue;
+
+                float coeff = localSmoothLengthScale.x * localSmoothLengthScale.y;
+
+                if (curNode->isMacro)   // 宏单元：系上 targetDensity
+                {
+                    bins[i][j]->nodeDensity += coeff * targetDensity * overlapArea;
                 }
                 else
                 {
-                    if (curNode->isFiller)  // 若当前节点是填充单元
+                    if (curNode->isFiller)  // 填充单元
                     {
-                       
-                        bins[i][j]->fillerDensity += localSmoothLengthScale.x * localSmoothLengthScale.y * overlapArea;
+                        bins[i][j]->fillerDensity += coeff * overlapArea;
                     }
-                    else        // 若当前节点是标准单元
-                    {           // qi = 单元面积
-                        bins[i][j]->nodeDensity += localSmoothLengthScale.x * localSmoothLengthScale.y * overlapArea;
+                    else                    // 标准单元
+                    {
+                        bins[i][j]->nodeDensity += coeff * overlapArea;
                     }
                 }
             }

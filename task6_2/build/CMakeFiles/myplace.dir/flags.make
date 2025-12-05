@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg
 
-CXX_FLAGS = -O3 -DNDEBUG -std=c++17
+CXX_FLAGS = -g -std=c++17
 

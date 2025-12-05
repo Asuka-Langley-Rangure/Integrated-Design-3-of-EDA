@@ -1,61 +1,61 @@
 [
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/myplace_main.cpp.o -c /home/czs/桌面/placement_project/task6_2/myplace_main.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/myplace_main.cpp.o -c /home/czs/桌面/placement_project/task6_2/myplace_main.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/myplace_main.cpp",
   "output": "CMakeFiles/myplace.dir/myplace_main.cpp.o"
 },
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/parse_bookshelf.cpp.o -c /home/czs/桌面/placement_project/task6_2/parse_bookshelf.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/parse_bookshelf.cpp.o -c /home/czs/桌面/placement_project/task6_2/parse_bookshelf.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/parse_bookshelf.cpp",
   "output": "CMakeFiles/myplace.dir/parse_bookshelf.cpp.o"
 },
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/MyPlace/myplace.cpp.o -c /home/czs/桌面/placement_project/task6_2/MyPlace/myplace.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/MyPlace/myplace.cpp.o -c /home/czs/桌面/placement_project/task6_2/MyPlace/myplace.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/MyPlace/myplace.cpp",
   "output": "CMakeFiles/myplace.dir/MyPlace/myplace.cpp.o"
 },
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/PlaceData/placedata.cpp.o -c /home/czs/桌面/placement_project/task6_2/PlaceData/placedata.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/PlaceData/placedata.cpp.o -c /home/czs/桌面/placement_project/task6_2/PlaceData/placedata.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/PlaceData/placedata.cpp",
   "output": "CMakeFiles/myplace.dir/PlaceData/placedata.cpp.o"
 },
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/Plot/plot.cpp.o -c /home/czs/桌面/placement_project/task6_2/Plot/plot.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/Plot/plot.cpp.o -c /home/czs/桌面/placement_project/task6_2/Plot/plot.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/Plot/plot.cpp",
   "output": "CMakeFiles/myplace.dir/Plot/plot.cpp.o"
 },
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/FFT/fft.cpp.o -c /home/czs/桌面/placement_project/task6_2/FFT/fft.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/FFT/fft.cpp.o -c /home/czs/桌面/placement_project/task6_2/FFT/fft.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/FFT/fft.cpp",
   "output": "CMakeFiles/myplace.dir/FFT/fft.cpp.o"
 },
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/FFT/fftsg.cpp.o -c /home/czs/桌面/placement_project/task6_2/FFT/fftsg.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/FFT/fftsg.cpp.o -c /home/czs/桌面/placement_project/task6_2/FFT/fftsg.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/FFT/fftsg.cpp",
   "output": "CMakeFiles/myplace.dir/FFT/fftsg.cpp.o"
 },
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/FFT/fftsg2d.cpp.o -c /home/czs/桌面/placement_project/task6_2/FFT/fftsg2d.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/FFT/fftsg2d.cpp.o -c /home/czs/桌面/placement_project/task6_2/FFT/fftsg2d.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/FFT/fftsg2d.cpp",
   "output": "CMakeFiles/myplace.dir/FFT/fftsg2d.cpp.o"
 },
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/Common/object.cpp.o -c /home/czs/桌面/placement_project/task6_2/Common/object.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/Common/object.cpp.o -c /home/czs/桌面/placement_project/task6_2/Common/object.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/Common/object.cpp",
   "output": "CMakeFiles/myplace.dir/Common/object.cpp.o"
 },
 {
   "directory": "/home/czs/桌面/placement_project/task6_2/build",
-  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -O3 -DNDEBUG -std=c++17 -o CMakeFiles/myplace.dir/Optimization/NesterovOpt.cpp.o -c /home/czs/桌面/placement_project/task6_2/Optimization/NesterovOpt.cpp",
+  "command": "/usr/bin/c++  -I/home/czs/桌面/placement_project/task6_2 -I/home/czs/桌面/placement_project/task6_2/MyPlace -I/home/czs/桌面/placement_project/task6_2/PlaceData -I/home/czs/桌面/placement_project/task6_2/Plot -I/home/czs/桌面/placement_project/task6_2/Common -I/home/czs/桌面/placement_project/task6_2/FFT -I/home/czs/桌面/placement_project/task6_2/Optimization -I/home/czs/桌面/placement_project/task6_2/eigen3 -I/home/czs/桌面/placement_project/task6_2/Library/CImg -g -std=c++17 -o CMakeFiles/myplace.dir/Optimization/NesterovOpt.cpp.o -c /home/czs/桌面/placement_project/task6_2/Optimization/NesterovOpt.cpp",
   "file": "/home/czs/桌面/placement_project/task6_2/Optimization/NesterovOpt.cpp",
   "output": "CMakeFiles/myplace.dir/Optimization/NesterovOpt.cpp.o"
 }
