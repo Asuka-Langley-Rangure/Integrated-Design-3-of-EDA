@@ -1,0 +1,3 @@
+C:/Users/sgchn/Desktop/placement_project/task6_3/build/CMakeFiles/myplace.dir
+C:/Users/sgchn/Desktop/placement_project/task6_3/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/sgchn/Desktop/placement_project/task6_3/build/CMakeFiles/ZERO_CHECK.dir
