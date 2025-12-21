@@ -651,6 +651,13 @@ void MyPlacer::BinInit()
         {
             bins[i][j] = new Bin_2D();
 
+            bins[i][j]->nodeDensity    = 0.0f;
+            bins[i][j]->fillerDensity  = 0.0f;
+            bins[i][j]->terminalDensity= 0.0f;
+            bins[i][j]->darkDensity    = 0.0f;
+            bins[i][j]->E.SetZero();
+            bins[i][j]->phi = 0.0f;
+
             bins[i][j]->ll.x = i * binStep.x + db->coreRegion.ll.x;
             bins[i][j]->ll.y = j * binStep.y + db->coreRegion.ll.y;
 
@@ -1030,10 +1037,20 @@ void MyPlacer::GetDensityGradient()
         binStartIdx.y = INT_DOWN((rectForCurNode.ll.y - db->coreRegion.ll.y) / binStep.y);
         binEndIdx.y = INT_DOWN((rectForCurNode.ur.y - db->coreRegion.ll.y) / binStep.y);
 
-        assert(binStartIdx.x >= 0);
-        assert(binEndIdx.x >= 0);
-        assert(binStartIdx.y >= 0);
-        assert(binEndIdx.y >= 0);
+        // 防止由于单元膨胀导致索引落在核心区域之外
+        if (binEndIdx.x < 0 || binEndIdx.y < 0)
+        {
+            index++;
+            continue;
+        }
+        if (binStartIdx.x >= binDimension.x || binStartIdx.y >= binDimension.y)
+        {
+            index++;
+            continue;
+        }
+
+        if (binStartIdx.x < 0) binStartIdx.x = 0;
+        if (binStartIdx.y < 0) binStartIdx.y = 0;
 
         if (binEndIdx.y >= binDimension.y)
         {
@@ -1045,6 +1062,11 @@ void MyPlacer::GetDensityGradient()
             binEndIdx.x = binDimension.x - 1;
         }
 
+        if (binStartIdx.x > binEndIdx.x || binStartIdx.y > binEndIdx.y)
+        {
+            index++;
+            continue;
+        }
 
         for (int i = binStartIdx.x; i <= binEndIdx.x; i++)
         {
@@ -1126,7 +1148,6 @@ void MyPlacer::setPosition(vector<VECTOR_3D> modulePositions)
             db->setModuleCenter_2D(NodesAndFillers[i], modulePositions[i]);
         }
 }
-
 
 
 

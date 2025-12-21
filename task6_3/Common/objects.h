@@ -37,7 +37,7 @@ public:
     bool isFixed;
     bool isFiller;
 
-    bool isTerminal; // 新增
+    bool isTerminal;
 
     vector<Pin *> modulePins;
     vector<Net *> nets;
