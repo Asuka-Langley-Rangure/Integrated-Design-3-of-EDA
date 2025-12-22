@@ -44,10 +44,9 @@ int main(int argc, char *argv[])
 
     std::cout << "-----------任务4------------" << endl;
 
-    myplacer->initialPlacement();
-
-    // 初始化 bin / filler / 梯度缓存，避免后续优化阶段未初始化崩溃
+    // 先做 filler 初始化/网格/梯度缓存，再进行初始放置
     myplacer->Init();
+    myplacer->initialPlacement();
 
     PLOTTING::plotPlacement("gp_result", db);
 

@@ -1,0 +1,10 @@
+^C:\USERS\SGCHN\DESKTOP\PLACEMENT_PROJECT\TASK6_4\BUILD\CMAKEFILES\A7A6117E3C948FC99C5C89F4450EA85F\GENERATE.STAMP.RULE
+setlocal
+D:\cmake\bin\cmake.exe -SC:/Users/sgchn/Desktop/placement_project/task6_4 -BC:/Users/sgchn/Desktop/placement_project/task6_4/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/sgchn/Desktop/placement_project/task6_4/build/myplacement.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

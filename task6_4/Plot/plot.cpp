@@ -93,11 +93,12 @@ void PLOTTING::plotPlacement(std::string imageName, PlaceData* db)
     const unsigned char Red[3]    = {255,   0,   0};
     const unsigned char Green[3]  = {  0, 200,   0};
     const unsigned char Blue[3]   = {  0,   0, 255};
-    const unsigned char Orange[3] = {255, 128,   0};
+    const unsigned char LightYellow[3] = {255, 255, 128};
     const unsigned char Gray[3]   = {180, 180, 180};
     const unsigned char Black[3]  = {  0,   0,   0};
 
     float opacity = 0.7f;
+    float filler_opacity = 0.25f; // 更高透明度的淡黄色填充
 
     // 绘制芯片边框
     const int frame_l = xMargin;
@@ -136,10 +137,11 @@ void PLOTTING::plotPlacement(std::string imageName, PlaceData* db)
         const unsigned char* color_fill =
             curNode->isMacro  ? Green :
             curNode->isFixed  ? Blue  :
-            curNode->isFiller ? Orange:
+            curNode->isFiller ? LightYellow :
                                 Red;
 
-        img.draw_rectangle(x_left, y_top, x_right, y_bottom, color_fill, opacity);
+        float use_opacity = curNode->isFiller ? filler_opacity : opacity;
+        img.draw_rectangle(x_left, y_top, x_right, y_bottom, color_fill, use_opacity);
         // if (color_fill == Red){
         //     std::cout << "x_left: " << x_left << ", y_top: " << y_top << ", x_right: " << x_right << ", y_bottom: " << y_bottom << std::endl;
         // }

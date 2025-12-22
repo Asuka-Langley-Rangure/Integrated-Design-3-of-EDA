@@ -89,7 +89,7 @@ void MyPlacer::initialPlacement()
     };
 
     // -------------------- 2. 迭代求解参数 --------------------
-    const int    maxOuterIters = 1;      // 外层最多迭代次数
+    const int    maxOuterIters = 30;      // 外层最多迭代次数
     const double distMin       = 25.0;    // Bound2Bound 距离下界
     const double lambdaDiag    = 1e-8;    // 小对角正则
     const double cgTol         = 1e-8;    // 迭代解收敛阈值
@@ -1185,7 +1185,11 @@ void MyPlacer::GetTotalGradient()
 
         float connectedNetNum = (float)m->modulePins.size();
         float charge = m->getArea();
-        float preconditioner = 1.0f / std::max(1.0f, (connectedNetNum + lambda * charge));
+        // |E_i| 用 densityGradient 的模长来近似
+        float e_mag = std::sqrt(densityGradient[gid].x * densityGradient[gid].x +
+                                densityGradient[gid].y * densityGradient[gid].y);
+        float denom = std::max(1e-3f, std::fabs(e_mag) + lambda * charge);
+        float preconditioner = 1.0f / denom;
 
         if (m->isFiller)
         {
@@ -1227,7 +1231,13 @@ void MyPlacer::setPosition(const std::vector<VECTOR_3D>& modulePositions)
     }
 
     for (size_t i = 0; i < n; ++i)
-        db->setModuleCenter_2D(NodesAndFillers[i], modulePositions[i]);
+    {
+        Module* m = NodesAndFillers[i];
+        if (!m) continue;
+        // 固定/终端模块保持原位，不写回
+        if (m->isFixed || m->isTerminal) continue;
+        db->setModuleCenter_2D(m, modulePositions[i]);
+    }
 }
 
 
