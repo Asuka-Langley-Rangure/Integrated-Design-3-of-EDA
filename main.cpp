@@ -197,8 +197,8 @@ void randomInitialize(PlacementDB& db) {
     std::mt19937 rng(12345);  // 固定种子，结果可复现
     // std::uniform_real_distribution<double> dx(db.die_xl, db.die_xh);
     // std::uniform_real_distribution<double> dy(db.die_yl, db.die_yh);
-    std::uniform_real_distribution<double> dx(db.die_xl, db.die_xh * 0.2);
-    std::uniform_real_distribution<double> dy(db.die_yl, db.die_yh * 0.2);
+    std::uniform_real_distribution<double> dx(db.die_xl, db.die_xh );
+    std::uniform_real_distribution<double> dy(db.die_yl, db.die_yh );
 
 
     for (auto& c : db.cells) {
