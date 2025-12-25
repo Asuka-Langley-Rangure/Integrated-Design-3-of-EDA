@@ -11,7 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # 可执行文件
-add_executable(myplace
+add_executable(myplacer
     myplace_main.cpp
     parse_bookshelf.cpp
 
@@ -29,12 +29,12 @@ add_executable(myplace
 )
 
 # 设置可执行文件输出到项目根目录
-set_target_properties(myplace PROPERTIES
+set_target_properties(myplacer PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 # 头文件路径
-target_include_directories(myplace PRIVATE
+target_include_directories(myplacer PRIVATE
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/MyPlace
     ${PROJECT_SOURCE_DIR}/PlaceData
@@ -52,5 +52,5 @@ target_include_directories(myplace PRIVATE
 
 # Linux 链接库
 if(UNIX AND NOT APPLE)
-    target_link_libraries(myplace PRIVATE pthread m dl X11)
+    target_link_libraries(myplacer PRIVATE pthread m dl X11)
 endif()
