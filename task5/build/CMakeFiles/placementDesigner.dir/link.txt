@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/placementDesigner.dir/main.cpp.o CMakeFiles/placementDesigner.dir/algorithm/wirelength.cpp.o CMakeFiles/placementDesigner.dir/algorithm/density.cpp.o CMakeFiles/placementDesigner.dir/parser/defParser.cpp.o -o placementDesigner  libplot.a 
