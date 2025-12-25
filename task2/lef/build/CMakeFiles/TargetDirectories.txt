@@ -1,3 +1,0 @@
-/home/czs/桌面/lef/build/CMakeFiles/lef_example.dir
-/home/czs/桌面/lef/build/CMakeFiles/edit_cache.dir
-/home/czs/桌面/lef/build/CMakeFiles/rebuild_cache.dir
