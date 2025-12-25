@@ -1,3 +1,0 @@
-/home/czs/桌面/placement_project/MyPlacement_v4.0_Nesterov/build/CMakeFiles/myplace.dir
-/home/czs/桌面/placement_project/MyPlacement_v4.0_Nesterov/build/CMakeFiles/edit_cache.dir
-/home/czs/桌面/placement_project/MyPlacement_v4.0_Nesterov/build/CMakeFiles/rebuild_cache.dir
