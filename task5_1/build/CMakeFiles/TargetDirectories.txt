@@ -1,3 +1,0 @@
-/home/czs/桌面/placement_project/task5_1/build/CMakeFiles/placementDesigner.dir
-/home/czs/桌面/placement_project/task5_1/build/CMakeFiles/edit_cache.dir
-/home/czs/桌面/placement_project/task5_1/build/CMakeFiles/rebuild_cache.dir
